@@ -38,9 +38,9 @@ public class PredatorPray {
 		
 		
 		// Create random start positions for the pray and predator		
-		for (int i = 0; i < pray.length; i++) {
-			pray[i] = generateRandomInt(minBorder, maxBorder);
-			predator[i] = generateRandomInt(minBorder, maxBorder);
+		for (int idx = 0; idx < pray.length; idx++) {
+			pray[idx] = generateRandomInt(minBorder, maxBorder);
+			predator[idx] = generateRandomInt(minBorder, maxBorder);
 		}
 		
 		
@@ -122,46 +122,44 @@ public class PredatorPray {
 	/* movePray:
 	 * TODO  
 	 */
-	private static int[] movePray(int[] pray, int randomInt, final int minBorder, final int maxBorder) {
+	private static void movePray(int[] pray, int randomInt, final int minBorder, final int maxBorder) {
 		// Pray moves by having a random value from [-s; s] added to both its coordinates
-		for (int i = 0; i < pray.length; i++) {
+		for (int idx = 0; idx < pray.length; idx++) {
 			// Update value
-			pray[i] += randomInt;
+			pray[idx] += randomInt;
 			// Check new value is inside border of grid
-			pray[i] = isInsideGrid(pray[i], minBorder, maxBorder);
+			pray[idx] = isInsideGrid(pray[idx], minBorder, maxBorder);
 			
 		}
-		return pray;
 	}
 	
 	
 	/* movePredator:
 	 * TODO explain movePredator
 	 */
-	private static int[] movePredator(int[] predator, int[] pray, final int maxMoveLength) {
+	private static void movePredator(int[] predator, int[] pray, final int maxMoveLength) {
 
 		// Iterate through each coordinate position of the predator
-		for (int i = 0; i < predator.length; i++) {
+		for (int idx = 0; idx < predator.length; idx++) {
 			
 			// Calculate the direction and distance 
-			int vectorDifference = pray[i] - predator[i];
+			int vectorDifference = pray[idx] - predator[idx];
 			int distance = Math.abs(vectorDifference);
 			
 			// Move the predator the optimal distance towards the pray
 			if (Math.abs(distance) <= maxMoveLength) {
-				predator[i] += vectorDifference;
+				predator[idx] += vectorDifference;
 			}
 			else {
 				// We check to see in what direction the predator should be heading to catch the pray
 				if (vectorDifference < 0) {
-					predator[i] -= maxMoveLength;
+					predator[idx] -= maxMoveLength;
 				} else {
-					predator[i] += maxMoveLength;
+					predator[idx] += maxMoveLength;
 				}
 			}
 		}
-		
-		return predator;
+
 	}
 	
 	
