@@ -30,25 +30,18 @@ public class PredatorPrayTeleport {
 		// check parameters are valid.
 		parameterValidation(maxBorder, maxMoveLength, iterations);
 
-		/* Initialize array to store the animal's location;
-		 * animal[0] = x, animal[1] = y
-		 */
-		int[] pray = {0, 0};
-		int[] predator = {0, 0};
-
+		// Initialize array to store the animals' location
+		int[] pray = {0, 0}, predator = {0, 0};
 
 		// Create random start positions for the pray and predator
-		for (int i = 0; i < pray.length; i++) {
-			pray[i] = generateRandomInt(minBorder, maxBorder);
-			predator[i] = generateRandomInt(minBorder, maxBorder);
-		}
-
+		generateCoordinates(pray, minBorder, maxBorder);
+		generateCoordinates(predator, minBorder, maxBorder);
 
 		// Printing the start positions
 		printPositions(pray, predator);
 
 		/*
-		 * In case iteration = 0, the loop won't run therefore we will have to check if positions match
+		 * In case iteration = 0, the for-loop won't run therefore we will have to check if positions match
 		 */
 		isMatchingPositions(pray, predator);
 
@@ -61,7 +54,7 @@ public class PredatorPrayTeleport {
 			movePredator(predator, pray, maxMoveLength);
 
 			// Move pray
-			movePray(pray, generateRandomInt(-maxMoveLength, maxMoveLength), minBorder, maxBorder);
+			movePray(pray, generateRandomInt(-maxMoveLength, maxMoveLength), maxMoveLength, minBorder, maxBorder);
 
 			/*
 			 * We actually move the predator before the pray.
@@ -84,13 +77,19 @@ public class PredatorPrayTeleport {
 	 * planned to expose to other classes as this is best practice.
 	 */
 	private static void parameterValidation(final int maxBorder, final int maxMoveLength, final int iterations) {
-
+		// The extra parentheses are not needed but do make it more readable.
 		if ((maxBorder <= 0) || (maxMoveLength < 2) || (iterations < 0)) {
 			System.out.println("Illegal Parameters!");
 			System.exit(0);
 		}
 	}
 
+
+	private static void generateCoordinates(int[] animal, final int minBorder, final int maxBorder) {
+		for (int i = 0; i < animal.length; i++) {
+			animal[i] = generateRandomInt(minBorder, maxBorder);
+		}
+	}
 
 
 	/* generateRandomInt:
@@ -118,11 +117,18 @@ public class PredatorPrayTeleport {
 		}
 	}
 
-
-	/* movePray:
+	/**
+	 * movePray:
 	 * TODO
 	 */
-	private static void movePray(int[] pray, int randomInt, final int minBorder, final int maxBorder) {
+	private static void movePray(int[] pray, int randomInt, final int maxMoveLength, final int minBorder, final int maxBorder) {
+
+		// Check to see if prays coordinates are divisible by s (maxMoveLength)
+		if (pray[0] % maxMoveLength == 0 && pray[1] % maxMoveLength == 0) {
+			// Teleport pray to new location
+			generateCoordinates(pray, minBorder, maxBorder);
+		}
+
 		// Pray moves by having a random value from [-s; s] added to both its coordinates
 		for (int i = 0; i < pray.length; i++) {
 			// Update value
