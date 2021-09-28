@@ -16,11 +16,14 @@ public class PredatorPray {
 	}
 	
 	
-	/* runSimulation
-	 * TODO describe 
+	/**
+	 * runSimulation
+	 * TODO describe
+	 * @param n describes the grid size height and with
+	 * @param
 	 */
 	public static void runSimulation(int n, int s, int t) {
-		
+
 		// Initialize immutable objects (constants) to prevent accidental altering.
 		final int maxBorder = n;
 		final int minBorder = 1;
@@ -29,26 +32,19 @@ public class PredatorPray {
 
 		// check parameters are valid.
 		parameterValidation(maxBorder, maxMoveLength, iterations);
-		
-		/* Initialize array to store the animal's location;
-		 * animal[0] = x, animal[1] = y
-		 */
-		int[] pray = {0, 0};
-		int[] predator = {0, 0};
-		
-		
-		// Create random start positions for the pray and predator		
-		for (int i = 0; i < pray.length; i++) {
-			pray[i] = generateRandomInt(minBorder, maxBorder);
-			predator[i] = generateRandomInt(minBorder, maxBorder);
-		}
-		
-		
+
+		// Initialize array to store the animals' location
+		int[] pray = {0, 0}, predator = {0, 0};
+
+		// Create random start positions for the pray and predator
+		generateCoordinates(pray, minBorder, maxBorder);
+		generateCoordinates(predator, minBorder, maxBorder);
+
 		// Printing the start positions
 		printPositions(pray, predator);
-		
+
 		/*
-		 * In case iteration = 0, the loop won't run therefore we will have to check if positions match
+		 * In case iteration = 0, the for-loop won't run therefore we will have to check if positions match
 		 */
 		isMatchingPositions(pray, predator);
 
@@ -90,6 +86,14 @@ public class PredatorPray {
 			System.exit(0);
 		}	
 		
+	}
+
+
+	// TODO explain
+	private static void generateCoordinates(int[] animal, final int minBorder, final int maxBorder) {
+		for (int i = 0; i < animal.length; i++) {
+			animal[i] = generateRandomInt(minBorder, maxBorder);
+		}
 	}
 	
 	

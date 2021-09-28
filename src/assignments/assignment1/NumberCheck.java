@@ -42,8 +42,7 @@ public class NumberCheck {
 			
 			if (Character.isDigit(tmp)) {
 				int test = (int) tmp % 49 + 1;
-//				System.out.println("tmp: " + test);
-				
+
 				// If index is odd, double the integer on the position
 				if (i % 2 != 0) {
 					int twiceInt = test * 2;
@@ -57,44 +56,27 @@ public class NumberCheck {
 				else {
 					sum += test;
 				}
-//				System.out.println("sum:" + sum);
-				
+
 			}
 			else {
 				return false;
 			}
 			
 		}
-		
-//		System.out.println(sum);
-		
+
 		if (sum % 10 == 0) {
-//			System.out.println("YES");
 			return true;
 		}
 		else {
-//			System.out.println("NOE");
 			return false;
 		}
-		
-		
-		// Convert string to integer
-		
-		
-			
-		// Check for negative numbers
-				 
-		
-		//*** Calculate the checksum
-		// We could use a HashMap here but lets pretend we don't know about this
-				
-
 		
 
 	}
 	
 	// This method validates the input 
 	public static boolean validInput(String number) {
+
 		
 		return true;
 		
