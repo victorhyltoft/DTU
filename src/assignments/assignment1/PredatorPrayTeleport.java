@@ -17,25 +17,21 @@ public class PredatorPrayTeleport {
 	
 	
 	/* runSimulation
-	 * TODO describe 
 	 */
 	public static void runSimulation(int n, int s, int t) {
 		
 		// Initialize immutable objects (constants) to prevent accidental altering.
-		final int maxBorder = n;
 		final int minBorder = 1;
-		final int maxMoveLength = s;
-		final int iterations = t;
 
 		// check parameters are valid.
-		parameterValidation(maxBorder, maxMoveLength, iterations);
+		parameterValidation(n, s, t);
 
 		// Initialize array to store the animals' location
 		int[] pray = {0, 0}, predator = {0, 0};
 
 		// Create random start positions for the pray and predator
-		generateCoordinates(pray, minBorder, maxBorder);
-		generateCoordinates(predator, minBorder, maxBorder);
+		generateCoordinates(pray, minBorder, n);
+		generateCoordinates(predator, minBorder, n);
 
 		// Printing the start positions
 		printPositions(pray, predator);
@@ -46,15 +42,15 @@ public class PredatorPrayTeleport {
 		isMatchingPositions(pray, predator);
 
 		// Run through all moves to be performed
-		for (int i = 0; i < iterations; i++) {
+		for (int i = 0; i < t; i++) {
 			// Check positions match
 			isMatchingPositions(pray, predator);
 
 			// Move predator
-			movePredator(predator, pray, maxMoveLength);
+			movePredator(predator, pray, s);
 
 			// Move pray
-			movePray(pray, generateRandomInt(-maxMoveLength, maxMoveLength), maxMoveLength, minBorder, maxBorder);
+			movePray(pray, generateRandomInt(-s, s), s, minBorder, n);
 
 			/*
 			 * We actually move the predator before the pray.
@@ -84,7 +80,6 @@ public class PredatorPrayTeleport {
 		}
 	}
 
-	// TODO explain
 	private static void generateCoordinates(int[] animal, final int minBorder, final int maxBorder) {
 		for (int i = 0; i < animal.length; i++) {
 			animal[i] = generateRandomInt(minBorder, maxBorder);
@@ -119,7 +114,6 @@ public class PredatorPrayTeleport {
 
 	/**
 	 * movePray:
-	 * TODO
 	 */
 	private static void movePray(int[] pray, int randomInt, final int maxMoveLength, final int minBorder, final int maxBorder) {
 
@@ -141,7 +135,6 @@ public class PredatorPrayTeleport {
 
 
 	/* movePredator:
-	 * TODO explain movePredator
 	 */
 	private static void movePredator(int[] predator, int[] pray, final int maxMoveLength) {
 
