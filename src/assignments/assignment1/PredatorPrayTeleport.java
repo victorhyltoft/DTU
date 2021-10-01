@@ -84,7 +84,7 @@ public class PredatorPrayTeleport {
 		}
 	}
 
-
+	// TODO explain
 	private static void generateCoordinates(int[] animal, final int minBorder, final int maxBorder) {
 		for (int i = 0; i < animal.length; i++) {
 			animal[i] = generateRandomInt(minBorder, maxBorder);

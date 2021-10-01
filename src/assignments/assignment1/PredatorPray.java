@@ -15,7 +15,8 @@ public class PredatorPray {
 		runSimulation(23, 3, 100);
 	}
 	
-	
+	// TODO convert array to Point
+
 	/**
 	 * runSimulation
 	 * TODO describe
