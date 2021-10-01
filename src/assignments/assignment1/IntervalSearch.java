@@ -37,63 +37,8 @@ public class IntervalSearch {
 	}
 	
 	public static boolean intervalContains(int g1, int g2, int b) {
-		
-		// The scenario that b <= 1 and not in the interval would result in an infinite loop, 
-		// thus we check for this scenario first
-		if (b <= 1) {
-			if (((g1 <= b) && (g2 >= b)) || ((g1 >= b) && (g2 <= b))) {
-				return true;
-			}
-			else {
-				return false;
-			}
-		}
-
-		return alternative(g1, g2, b);
-
-		// return bruteForcing(g1, g2, b);
-		
-	}
-
-	// Inefficient program
-	public static boolean bruteForcing(int g1, int g2, int b) {
-		// Brute forcing...
-
-		int pow_result = 1;
-		// Why while-loop instead of for-loop? Because we don't know how many iterations we need to through
-		while (true) {
-			// Compare the power and the interval
-			// We check
-			if (((g1 <= pow_result) && (g2 >= pow_result)) || ((g1 >= pow_result) && (g2 <= pow_result))) {
-				return true;
-			}
-			// Check the upper-bounds for "a" such that b^a <= (g1 or g2)
-			// If this is the case, a can not be valid.
-			else if ((pow_result >= g1) && (pow_result >= g2)) {
-				return false;
-
-			}
-			// Check the lower-bounds
-			else if ((pow_result <= g1) && (pow_result <= g2)) {
-				pow_result *= b;
-
-			}
-			else {
-				return false;
-			}
-
-		}
-	}
-
-	public static boolean alternative(int g1, int g2, int b) {
-		// Find the n'th (b'th) root of both the interval
-		double tmp = Math.floor(Math.pow(g1, 1.0 / b));
-		double tmp2 = Math.floor(Math.pow(g2, 1.0 / b));
-
-		/*
-		We can either make a condition such that it takes into consideration that both g1 and g2 can be the upper and lower bound.
-		Otherwise we can make check which of the two g-values are the upper and lower bounds.
-		 */
+		// Determine the upper and lower bounds.
+		// This is simply done to simplify the comparison condition
 		int upper, lower;
 		if (g1 < g2) {
 			upper = g2;
@@ -103,21 +48,15 @@ public class IntervalSearch {
 			lower = g2;
 		}
 
-		
-		System.out.println("Upper: " + upper + ", Lower: " + lower);
+		// Find the double for the n'th (b'th) root for both intervals
+		double tmp = Math.floor(Math.pow(upper, 1.0 / b));
+		double tmp2 = Math.floor(Math.pow(lower, 1.0 / b));
 
-
+		// Calculate the max pow of b,
 		int pow1 = (int) Math.pow(b, tmp);
 		int pow2 = (int) Math.pow(b, tmp2);
 
-
-		// true when; the first result of pow is bigger than the lowest interval and lower than the biggest interval parameter
-		// or when the second result of pow is lower than the
-		if (((g1 <= pow1) && (g2 >= pow1)) || ((g1 <= pow2) && (g2 >= pow2)))  {
-			return true;
-		}
-		return false;
+		return (upper >= pow1) && (lower <= pow1);
+		
 	}
-	
-
 }
