@@ -9,78 +9,54 @@ package assignments.assignment1;
 public class NumberCheck {
 
 	public static void main(String[] args) {
+        System.out.println(check("3475"));
         System.out.println(check("1234"));
+        System.out.println(check("1234a"));
+        System.out.println(check("1234b"));
+        System.out.println(check("1234c"));
+        System.out.println(check("003475"));
+        System.out.println(check("347500"));
 	}
-		
-	
-	//* ONE IMPLEMENTATION *//
-	public static boolean check1(String number) {
-		
-		int numberAsInt = 0;
-		try {
-			numberAsInt = Integer.parseInt(number);
-		}	
-		catch (NumberFormatException ex) {
-			return false;
-		}
-		// Continue on to make 
-		System.out.println(numberAsInt);
-		return true;
-	}
-	
-	
-	// The "check" method calculates the checksum 
-	//* ANOTHER IMPLEMENTATION *//
-	// The "problem" with this method is we have to potentially run through some if not all of the String
-	// while we do computations, only to throw it all out if there's a non-digit. 
+
 	public static boolean check(String number) {
-		
-		int sum = 0;
-		int numberLength = number.length();
-		for (int i = 1; i <= numberLength; i++) {
-			char tmp = number.charAt(i - 1);
-			
-			if (Character.isDigit(tmp)) {
-				int test = (int) tmp % 49 + 1;
 
-				// If index is odd, double the integer on the position
-				if (i % 2 != 0) {
-					int twiceInt = test * 2;
-					if (twiceInt >= 10) {
-						sum += twiceInt % 10 + 1;						
-					}
-					else {
-						sum += twiceInt;
+		try {
+			// First we make sure that all characters in the string are integers.
+			Integer.parseInt(number);
+			// Alternatively we could have checked each char with an if-statement containing
+			// "isDigit()", but this is a more elegant solution with less branching.
+
+			// We calculate the cross sum as we iterate through the numbers in the string.
+			int sum = 0;
+			// Iterate through all the chars in the number string.
+			for (int i = 0; i < number.length(); i++) {
+				char currentChar = number.charAt(i);
+
+				// Convert ascii value to integer
+				int intValue = (int) currentChar % '0';
+
+				// If index is odd, double the integer
+				if (i % 2 == 0) {
+					int intValueTimesTwo = intValue * 2;
+					// In case twice the integer >= 10, then take modulus
+					if (intValueTimesTwo >= 10) {
+						sum += intValueTimesTwo % 10 + 1;
+					} else {
+						sum += intValueTimesTwo;
 					}
 				}
+				// In case twice the int was lower than 10.
 				else {
-					sum += test;
+					sum += intValue;
 				}
-
 			}
-			else {
-				return false;
-			}
-			
-		}
+			return sum % 10 == 0;
 
-		if (sum % 10 == 0) {
-			return true;
-		}
-		else {
+		} catch (NumberFormatException e) {
+			// In case Integer.parseInt fails, there is a non-digit in the string
 			return false;
 		}
-		
-
-	}
-	
-	// This method validates the input 
-	public static boolean validInput(String number) {
-
-		
-		return true;
-		
-	}
+		}
 
 }
 
