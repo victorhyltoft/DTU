@@ -48,15 +48,19 @@ public class IntervalSearch {
 			lower = g2;
 		}
 
-		// Find the double for the n'th (b'th) root for both intervals
+		// TODO
+		// Logaritmen
+		// What if b is 1?
+		// Overflow
+
+		// Find the n'th (b'th) root
 		double tmp = Math.floor(Math.pow(upper, 1.0 / b));
-		double tmp2 = Math.floor(Math.pow(lower, 1.0 / b));
 
 		// Calculate the max pow of b,
-		int pow1 = (int) Math.pow(b, tmp);
-		int pow2 = (int) Math.pow(b, tmp2);
+		int powResult = (int) Math.pow(b, tmp);
 
-		return (upper >= pow1) && (lower <= pow1);
+		// Check and return if the max pow of b is within the interval
+		return (upper >= powResult) && (lower <= powResult);
 		
 	}
 }
