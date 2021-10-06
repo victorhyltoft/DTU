@@ -15,6 +15,7 @@ public class NumberCheck {
         System.out.println(check("1234c"));
         System.out.println(check("003475"));
         System.out.println(check("347500"));
+        System.out.println(check("01230"));
         System.out.println(check(""));
 	}
 
@@ -39,9 +40,9 @@ public class NumberCheck {
 
 		// We calculate the cross sum as we iterate through the numbers in the string.
 		int sum = 0;
-		// Iterate through all the chars in the number string (in reverse order).
-		for (int i = number.length(); i > 0; i++) {
-			char currentChar = number.charAt(i);
+		// Iterate through all the chars in the number-string in reverse order.
+		for (int i = number.length(); i > 0; i--) {
+			char currentChar = number.charAt(i - 1);
 
 			// Convert ascii value to integer
 			int intValue = (int) currentChar % '0';
@@ -49,17 +50,13 @@ public class NumberCheck {
 			// If index is odd, double the integer
 			if (i % 2 == 0) {
 				int intValueTimesTwo = intValue * 2;
-				// In case twice the integer >= 10, then take modulus
+				// In case twice the integer >= 10, then take mod 10
 				if (intValueTimesTwo >= 10) {
 					sum += intValueTimesTwo % 10 + 1;
-				} else {
-					sum += intValueTimesTwo;
-				}
+				// In case twice the int is lower than 10.
+				} else sum += intValueTimesTwo;
 			}
-			// In case twice the int was lower than 10.
-			else {
-				sum += intValue;
-			}
+			else sum += intValue;
 		}
 		return sum % 10 == 0;
 		}

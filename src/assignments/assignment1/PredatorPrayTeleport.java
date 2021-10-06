@@ -110,7 +110,6 @@ public class PredatorPrayTeleport {
 
 
     /**
-     * isMatchingPositions:
      * This method check to see if the current coordinates of the pray and predator matches.
      * In the case they match, the program prints a confirmation and terminates.
      */

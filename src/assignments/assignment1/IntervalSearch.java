@@ -51,7 +51,7 @@ public class IntervalSearch {
 		// TODO
 		// Logaritmen
 		// What if b is 1?
-		// Overflow
+		// Overflow???
 
 		// Find the n'th (b'th) root
 		double tmp = Math.floor(Math.pow(upper, 1.0 / b));

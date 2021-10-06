@@ -2,7 +2,6 @@ package uge5.exercises;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.Scanner;
 
 public class Cleaner {
@@ -12,26 +11,25 @@ public class Cleaner {
     }
 
     public static void cleanText(String filename) {
+        Scanner file = null;
         try {
-            Scanner file = new Scanner(new File(filename));
-            while (file.hasNextLine()) {
-                String word = file.next();
-                for (int i = 0; i < word.length(); i++) {
-                    if (Character.isLetter(word.charAt(i))) {
-                        word.replace(word.charAt(i), '\0');
-
-                    }
-                }
-                System.out.println(word);
-
-
-
-
-                System.out.println(word);
-            }
-
+            file = new Scanner(new File(filename));
         } catch (FileNotFoundException e) {
             e.printStackTrace();
+        }
+
+        while (file.hasNextLine()) {
+            String word = file.next();
+            for (int i = 0; i < word.length(); i++) {
+                if (!Character.isLetter(word.charAt(i))) {
+                    word = word.replace(Character.toString(word.charAt(i)), "");
+                }
+                if (word.length() == 4) {
+                    word = "";
+                }
+            }
+            System.out.println(word);
+
         }
 
 

@@ -17,23 +17,23 @@ public class PredatorPray {
 
     /**
      * Runs the simulation for the hunt
-     * @param grid defines the grid size's height and width
+     * @param gridSize defines the gridSize size's height and width
      * @param maxTranslateLength defines how far an animal can translate per move.
      * @param moves defines number of moves to be performed
      */
-    public static void runSimulation(final int grid, final int maxTranslateLength, final int moves) {
+    public static void runSimulation(final int gridSize, final int maxTranslateLength, final int moves) {
         // We use "final int" as keywords for some parameters to make
         // them immutable objects to prevent accidental altering.
 
         // Check parameters are valid.
-        parameterValidation(grid, maxTranslateLength, moves);
+        parameterValidation(gridSize, maxTranslateLength, moves);
 
-        // Initialize points to store the animals' location
+        // Initialize points to store the animals' location as coordinates (x and y)
         Point pray = new Point(), predator = new Point();
 
-        // Create random start positions for the pray and predator
-        generateCoordinates(pray, grid);
-        generateCoordinates(predator, grid);
+        // Create random start positions for the pray and predator inside the grid
+        generateCoordinates(pray, gridSize);
+        generateCoordinates(predator, gridSize);
 
         // Printing the start positions
         printPositions(pray, predator);
@@ -47,7 +47,7 @@ public class PredatorPray {
             movePredator(predator, pray, maxTranslateLength);
 
             // Move pray
-            movePray(pray, generateRandomInt(-maxTranslateLength, maxTranslateLength), grid);
+            movePray(pray, generateRandomInt(-maxTranslateLength, maxTranslateLength), gridSize);
 
             /*
              * We actually move the predator before the pray.
@@ -68,13 +68,12 @@ public class PredatorPray {
 
 
     /**
-     * parameterValidation:
      * Validates the given parameters.
-     * Note: We use the private keyword to encapsulate our methods we haven't
-     * planned to expose to other classes as this is simply best practice.
+     * Note: We use the "private" keyword to encapsulate our methods we haven't
+     * planned to expose to other classes as this is simply best practice for security.
      */
     private static void parameterValidation(final int grid, final int maxTranslateLength, final int moves) {
-
+        // Check conditions detailed in the
         if ((grid <= 0) || (maxTranslateLength <= 0) || (moves < 0)) {
             System.out.println("Illegal Parameters!");
             System.exit(0);
@@ -98,7 +97,7 @@ public class PredatorPray {
 
 
     /**
-     * Pretty self-explanatory method
+     * Generates a random number between min and max both included.
      * @param max generates a number between 0-max
      * @param min shifts the generated number
     **/
@@ -110,9 +109,9 @@ public class PredatorPray {
 
 
     /**
-     * isMatchingPositions:
      * This method check to see if the current coordinates of the pray and predator matches.
-     * In the case they match, the program prints a confirmation and terminates.
+     * In the case they match, the program prints a confirmation and terminates with
+     * exit code 1 to show successful termination.
      */
     private static void isMatchingPositions(Point pray, Point predator) {
         // Compare points
@@ -148,8 +147,8 @@ public class PredatorPray {
 
         // Translate the predator the optimal distance towards the pray
 
-        // If distance to pray is less
-        // TODO - check that predator doesn't escape the grid
+        // If distance to pray is less than max possible movement length,
+        // we want the predator to move in smaller steps to not overshoot.
         if (distanceX <= maxTranslateLength) {
             // Here I use a ternary expression to compact the code as the emphasis is not
             // on the branching but on the values being given to the coordinates of the predator.
@@ -159,6 +158,7 @@ public class PredatorPray {
         } else {
             predator.translate(predator.x < pray.x ? maxTranslateLength : -maxTranslateLength,0);
         }
+        // Same steps just with the y-coordinate instead of the x-coordinate.
         if (distanceY <= maxTranslateLength) {
             predator.translate(0, predator.y < pray.y ? distanceY : -distanceY);
         } else {
@@ -170,37 +170,28 @@ public class PredatorPray {
     }
 
 
-    /* moveInsideGrid:
-     * We actually only have to check if the pray is inside the box.
-     * As long as the pray doesn't find a way to exit the grid,
-     * the predator can not escape as well, because of the implementation,
-     * that the predator never exceeds the prays' coordinates.
+    /**
+     * This method checks if an animal is outside the grid, and if so moves it to the closets border inside the grid.
+     * @param animal the animal to check is inside the grid
+     * @param grid the grid size defined in the beginning of the program.
      */
     private static void moveInsideGrid(Point animal, final int grid) {
-        int animalX = animal.x;
-        int animalY = animal.y;
-
-        // Simple comparisons to check pray is inside the given border and if not then move it inside.
-        // TODO - Theres a big error here allowing the animals to escape the grid.
-//        if (animalX > grid) {
-//            animal.move(grid, animalY);
-//        } else if (animalX < 0) {
-//            animal.move(0, animalY);
-//        }
-
-        if (animalX >= grid) {
-            animal.setLocation(grid, animalY);
+        // Simple comparisons to check if pray is inside the given grid
+        // and if not then update the coordinate value to be inside.
+        if (animal.x > grid) {
+            animal.x = grid;
+        } else if (animal.x < 0) {
+            animal.x = 0;
         }
-        if (animalX <= 0) {
-            animal.setLocation(0, animalY);
+        if (animal.y > grid) {
+            animal.y = grid;
+        } else if (animal.y < 0) {
+            animal.y = 0;
         }
-
-        if (animalY > grid) {
-            animal.move(animalX, grid);
-        } else if (animalY < 0) {
-            animal.move(animalX, 0);
-        }
-
+        // We actually only have to check if the pray is inside the box.
+        // As long as the pray doesn't find a way to exit the grid,
+        // the predator can not escape as well, because of the implementation,
+        // that the predator never overshoots the prays' coordinates.
     }
 
 
