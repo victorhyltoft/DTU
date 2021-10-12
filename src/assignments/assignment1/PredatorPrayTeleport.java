@@ -5,35 +5,40 @@ import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * @author Victor Hyltoft - s214964
+ * Notes:
+ * We use the "private" keyword to encapsulate our methods we haven't
+ * planned to expose to other classes as this is simply best practice.
  *
+ * We use "final" keywords for some parameters to make them immutable objects
+ * (constants) to prevent accidental altering. Also, because it's best practice.
  */
 
 public class PredatorPrayTeleport {
 
     public static void main(String[] args) {
 
-        runSimulation(23, 3, 100);
+        runSimulation(10, 3, 100);
     }
 
     /**
      * Runs the simulation for the hunt
-     * @param grid defines the grid size's height and width
+     * @param gridSize defines the gridSize size's height and width
      * @param maxTranslateLength defines how far an animal can translate per move.
      * @param moves defines number of moves to be performed
      */
-    public static void runSimulation(final int grid, final int maxTranslateLength, final int moves) {
-        // We use "final int" as keywords for some parameters to make
-        // them immutable objects to prevent accidental altering.
+    public static void runSimulation(final int gridSize, final int maxTranslateLength, final int moves) {
+        // Print parameters
+        System.out.println("n=" + gridSize + " s=" + maxTranslateLength + " t=" + moves);
 
         // Check parameters are valid.
-        parameterValidation(grid, maxTranslateLength, moves);
+        parameterValidation(gridSize, maxTranslateLength, moves);
 
         // Initialize points to store the animals' location
         Point pray = new Point(), predator = new Point();
 
         // Create random start positions for the pray and predator
-        generateCoordinates(pray, grid);
-        generateCoordinates(predator, grid);
+        generateCoordinates(pray, gridSize);
+        generateCoordinates(predator, gridSize);
 
         // Printing the start positions
         printPositions(pray, predator);
@@ -43,18 +48,12 @@ public class PredatorPrayTeleport {
 
         // Run through all moves to be performed
         for (int i = 0; i < moves; i++) {
+            // Move pray
+            int prayMovement = generateRandomInt(-maxTranslateLength, maxTranslateLength);
+            movePray(pray, prayMovement, gridSize, maxTranslateLength);
+
             // Move predator
             movePredator(predator, pray, maxTranslateLength);
-
-            // Move pray
-            movePray(pray, generateRandomInt(-maxTranslateLength, maxTranslateLength), grid, maxTranslateLength);
-
-            /*
-             * We actually move the predator before the pray.
-             * This is done as the predator moves in relation to the current position of the pray.
-             * If we first call movePray, the predator would move towards the new coordinates
-             * of the pray instead, which is unwanted behavior in our program.
-             */
 
             // Print current positions for pray and predator
             printPositions(pray, predator);
@@ -68,31 +67,31 @@ public class PredatorPrayTeleport {
 
 
     /**
-     * parameterValidation:
      * Validates the given parameters.
-     * Note: We use the private keyword to encapsulate our methods we haven't
-     * planned to expose to other classes as this is simply best practice.
      */
-    private static void parameterValidation(final int grid, final int maxTranslateLength, final int moves) {
+    private static void parameterValidation(final int gridSize, final int maxTranslateLength, final int moves) {
 
-        if ((grid <= 0) || (maxTranslateLength <= 0) || (moves < 0)) {
+        if ((gridSize <= 0) || (maxTranslateLength <= 1) || (moves < 0)) {
             System.out.println("Illegal Parameters!");
             System.exit(0);
         }
+
+        // While this validation doesn't really need its own method, I like to separate
+        // code snippets which terminates the program into its own methods.
 
     }
 
 
     /**
-     * Generates random coordinates for the animal inside the grid
+     * Generates random coordinates for the animal inside the gridSize
      * @param animal takes an animal (pray or predator) as an argument
-     * @param grid is the border of the grid
+     * @param gridSize is the border of the gridSize
      */
-    private static void generateCoordinates(Point animal, final int grid) {
+    private static void generateCoordinates(Point animal, final int gridSize) {
         // Iterate through both coordinates; x and y
         for (int i = 0; i < 2; i++) {
             // Update the animals' location
-            animal.setLocation(generateRandomInt(0, grid), generateRandomInt(0, grid));
+            animal.setLocation(generateRandomInt(0, gridSize), generateRandomInt(0, gridSize));
         }
     }
 
@@ -105,7 +104,7 @@ public class PredatorPrayTeleport {
     private static int generateRandomInt(int min, int max) {
         // This way of generating a random integer in a specific range is arguably better than Random.nextInt().
         // ThreadLocalRandom is equivalent as it extends the Random class
-        return ThreadLocalRandom.current().nextInt(min, max + 1);
+        return ThreadLocalRandom.current().nextInt(min, max);
     }
 
 
@@ -118,7 +117,7 @@ public class PredatorPrayTeleport {
         if (pray.equals(predator)) {
             // Successfully completed program
             System.out.println("Catch!");
-            System.exit(1);
+            System.exit(0);
         }
     }
 
@@ -128,23 +127,49 @@ public class PredatorPrayTeleport {
      * @param pray the pray
      * @param randomInt a random integer that moves the pray
      */
-    private static void movePray(Point pray, int randomInt, final int grid, final int maxTranslateLength) {
-
+    private static void movePray(Point pray, int randomInt, final int gridSize, final int maxTranslateLength) {
         // Check to see if prays coordinates are divisible by s (maxTranslateLength)
         // We add some extra "unneeded" parentheses' to make the condition more readable.
         if ((pray.x % maxTranslateLength == 0) && (pray.y % maxTranslateLength == 0)) {
             // Teleport pray to new location
-            generateCoordinates(pray, grid);
+            generateCoordinates(pray, gridSize);
             // If pray teleport, then it should not also translate. That is why we have en else-statement afterwards
         } else {
-            // Translate pray (move from current position)
-            pray.translate(randomInt, randomInt);
+            // Check x-coordinate for overflow
+            // In case of overflow, we'll move the animal to the closest gridSize edge
+            // else we will translate the pray normally
+            if (checkOverflow(pray.x, randomInt)) {
+                pray.x = gridSize - 1;
+            } else {
+                pray.x += randomInt;
+            }
+
+            // Check y-coordinate for overflow
+            if (checkOverflow(pray.y, randomInt)) {
+                pray.y = gridSize - 1;
+            } else {
+                pray.y += randomInt;
+            }
         }
 
-        // Check pray is still inside grid
-        moveInsideGrid(pray, grid);
+        // Check pray is still inside gridSize
+        moveInsideGrid(pray, gridSize);
     }
 
+
+    /**
+     * Check for overflow as (animalCoordinate + movement) could possibly result in overflow.
+     */
+    private static boolean checkOverflow(int animalCoordinate, final int movement) {
+        // Check if sum results in overflow
+        try {
+            //noinspection ResultOfMethodCallIgnored
+            Math.addExact(animalCoordinate, movement);
+        } catch (ArithmeticException e) {
+            return true;
+        }
+        return false;
+    }
 
     /**
      * Moves the predator
@@ -171,35 +196,25 @@ public class PredatorPrayTeleport {
         } else {
             predator.translate(0, predator.y < pray.y ? maxTranslateLength : -maxTranslateLength);
         }
-
-        // Alternatively we could have calculated the direction first and used that to make it a tiny bit more readable
-
     }
 
 
-    /* moveInsideGrid:
-     * We actually only have to check if the pray is inside the box.
-     * As long as the pray doesn't find a way to exit the grid,
-     * the predator can not escape as well, because of the implementation,
-     * that the predator never exceeds the prays' coordinates.
+    /**
+     * Moves an animal (pray) inside the grid if outside.
      */
-    private static void moveInsideGrid(Point animal, final int grid) {
-        int animalX = animal.x;
-        int animalY = animal.y;
-
-        // Simple comparisons to check pray is inside the given border and if not then move it inside.
-        if (animalX > grid) {
-            animal.move(grid, animalY);
-        } else if (animalX < 0) {
-            animal.move(0, animalY);
+    private static void moveInsideGrid(Point animal, final int gridSize) {
+        // Simple comparisons to check if pray is inside the given gridSize
+        // and if not then update the coordinate value to be inside.
+        if (animal.x >= gridSize) {
+            animal.x = gridSize - 1;
+        } else if (animal.x < 0) {
+            animal.x = 0;
         }
-
-        if (animalY > grid) {
-            animal.move(animalX, grid);
-        } else if (animalY < 0) {
-            animal.move(animalX, 0);
+        if (animal.y >= gridSize) {
+            animal.y = gridSize - 1;
+        } else if (animal.y < 0) {
+            animal.y = 0;
         }
-
     }
 
 

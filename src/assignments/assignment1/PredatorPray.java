@@ -5,35 +5,40 @@ import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * @author Victor Hyltoft - s214964
+ * Notes:
+ * We use the "private" keyword to encapsulate our methods we haven't
+ * planned to expose to other classes as this is simply best practice.
  *
+ * We use "final" keywords for some parameters to make them immutable objects
+ * (constants) to prevent accidental altering. Also, because it's best practice.
  */
 
 public class PredatorPray {
 
     public static void main(String[] args) {
-
-        runSimulation(10, 2, 20);
+        runSimulation(100, 3, 20);
     }
 
     /**
      * Runs the simulation for the hunt
-     * @param gridSize defines the gridSize size's height and width
+     * @param grid defines the grid size's height and width
      * @param maxTranslateLength defines how far an animal can translate per move.
      * @param moves defines number of moves to be performed
      */
-    public static void runSimulation(final int gridSize, final int maxTranslateLength, final int moves) {
-        // We use "final int" as keywords for some parameters to make
-        // them immutable objects to prevent accidental altering.
+    public static void runSimulation(final int grid, final int maxTranslateLength, final int moves) {
+        // Print parameters
+        System.out.println("n=" + grid + " s=" + maxTranslateLength + " t=" + moves);
+
 
         // Check parameters are valid.
-        parameterValidation(gridSize, maxTranslateLength, moves);
+        parameterValidation(grid, maxTranslateLength, moves);
 
         // Initialize points to store the animals' location as coordinates (x and y)
         Point pray = new Point(), predator = new Point();
 
         // Create random start positions for the pray and predator inside the grid
-        generateCoordinates(pray, gridSize);
-        generateCoordinates(predator, gridSize);
+        generateCoordinates(pray, grid);
+        generateCoordinates(predator, grid);
 
         // Printing the start positions
         printPositions(pray, predator);
@@ -43,18 +48,11 @@ public class PredatorPray {
 
         // Run through all moves to be performed
         for (int i = 0; i < moves; i++) {
+            // Move pray
+            movePray(pray, generateRandomInt(-maxTranslateLength, maxTranslateLength), grid);
+
             // Move predator
             movePredator(predator, pray, maxTranslateLength);
-
-            // Move pray
-            movePray(pray, generateRandomInt(-maxTranslateLength, maxTranslateLength), gridSize);
-
-            /*
-             * We actually move the predator before the pray.
-             * This is done as the predator moves in relation to the current position of the pray.
-             * If we first call movePray, the predator would move towards the new coordinates
-             * of the pray instead, which is unwanted behavior in our program.
-             */
 
             // Print current positions for pray and predator
             printPositions(pray, predator);
@@ -68,16 +66,16 @@ public class PredatorPray {
 
 
     /**
-     * Validates the given parameters.
-     * Note: We use the "private" keyword to encapsulate our methods we haven't
-     * planned to expose to other classes as this is simply best practice for security.
+     * Validates the given parameters as detailed in the assignment.
      */
     private static void parameterValidation(final int grid, final int maxTranslateLength, final int moves) {
-        // Check conditions detailed in the
         if ((grid <= 0) || (maxTranslateLength <= 0) || (moves < 0)) {
             System.out.println("Illegal Parameters!");
             System.exit(0);
         }
+
+        // While this validation doesn't really need its own method, I like to separate
+        // code snippets which terminates the program into its own methods.
 
     }
 
@@ -98,13 +96,13 @@ public class PredatorPray {
 
     /**
      * Generates a random number between min and max both included.
-     * @param max generates a number between 0-max
+     * @param max generates a number between 0-max (equivalent to: 0, 1,..., n - 1)
      * @param min shifts the generated number
     **/
     private static int generateRandomInt(int min, int max) {
         // This way of generating a random integer in a specific range is arguably better than Random.nextInt().
         // ThreadLocalRandom is equivalent as it extends the Random class
-        return ThreadLocalRandom.current().nextInt(min, max + 1);
+        return ThreadLocalRandom.current().nextInt(min, max);
     }
 
 
@@ -118,7 +116,7 @@ public class PredatorPray {
         if (pray.equals(predator)) {
             // Successfully completed program
             System.out.println("Catch!");
-            System.exit(1);
+            System.exit(0);
         }
     }
 
@@ -129,23 +127,50 @@ public class PredatorPray {
      * @param randomInt a random integer that moves the pray
      */
     private static void movePray(Point pray, int randomInt, final int grid) {
-        // Translate pray (move from current position)
-        pray.translate(randomInt, randomInt);
+        // Check new x-coordinate for overflow
+        // In case of overflow, we'll move the animal to grid edge
+        // else we will translate the pray normally
+        if (checkOverflow(pray.x, randomInt)) {
+            pray.x = grid - 1;
+        } else {
+            pray.x += randomInt;
+        }
+
+        // Check new y-coordinate for overflow
+        if (checkOverflow(pray.y, randomInt)) {
+            pray.y = grid - 1;
+        } else {
+            pray.y += randomInt;
+        }
 
         // Check pray is still inside grid
         moveInsideGrid(pray, grid);
     }
 
+    /**
+     * Check for overflow as (animalCoordinate + movement) could possibly result in overflow.
+     */
+    private static boolean checkOverflow(int animalCoordinate, final int movement) {
+        // Check if sum results in overflow
+        try {
+            //noinspection ResultOfMethodCallIgnored
+            Math.addExact(animalCoordinate, movement);
+        } catch (ArithmeticException e) {
+            return true;
+        }
+        return false;
+    }
 
     /**
      * Moves the predator
      */
     private static void movePredator(Point predator, Point pray, final int maxTranslateLength) {
 
+        // Calculate the horizontal and vertical distance between the predator and pray
         int distanceX = (int) Point.distance(predator.x, 0, pray.x,  0);
         int distanceY = (int) Point.distance(0, predator.y, 0,  pray.y);
 
-        // Translate the predator the optimal distance towards the pray
+        // Translate the predator the optimal distance towards the pray (don't overshoot)
 
         // If distance to pray is less than max possible movement length,
         // we want the predator to move in smaller steps to not overshoot.
@@ -164,9 +189,6 @@ public class PredatorPray {
         } else {
             predator.translate(0, predator.y < pray.y ? maxTranslateLength : -maxTranslateLength);
         }
-
-        // Alternatively we could have calculated the direction first and used that to make it a tiny bit more readable
-
     }
 
 
@@ -178,20 +200,17 @@ public class PredatorPray {
     private static void moveInsideGrid(Point animal, final int grid) {
         // Simple comparisons to check if pray is inside the given grid
         // and if not then update the coordinate value to be inside.
-        if (animal.x > grid) {
-            animal.x = grid;
+        if (animal.x >= grid) {
+            animal.x = grid - 1;
         } else if (animal.x < 0) {
             animal.x = 0;
         }
-        if (animal.y > grid) {
-            animal.y = grid;
+        if (animal.y >= grid) {
+            animal.y = grid - 1;
         } else if (animal.y < 0) {
             animal.y = 0;
         }
-        // We actually only have to check if the pray is inside the box.
-        // As long as the pray doesn't find a way to exit the grid,
-        // the predator can not escape as well, because of the implementation,
-        // that the predator never overshoots the prays' coordinates.
+
     }
 
 
