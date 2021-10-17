@@ -1,0 +1,3 @@
+word count = 73430-73490
+different words =  7205-7216
+repetitions = 155-160
