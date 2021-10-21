@@ -5,15 +5,14 @@ import java.io.FileNotFoundException;
 import java.util.*;
 
 public class TextAnalysis {
-    private String sourceFileName;
-    private int maxNoOfWords;
+    private final String sourceFileName;
     private int noOfWords;
     private int noOfDifferentWords;
     private int noOfRepetitions;
 
     public static void main(String[] a){
-        String relative_path = "src/assignments/assignment2/";
-        String textile = "text17_00.txt";
+        String relative_path = "src/assignments/assignment2/exercise1/";
+        String textile = "TextAnalysis_test_hidden_02.txt";
 
         TextAnalysis ta = new TextAnalysis(relative_path + textile, 50);
         System.out.println("word count = " + ta.wordCount());
@@ -23,33 +22,35 @@ public class TextAnalysis {
 
     // Constructor
     public TextAnalysis(String sourceFileName, int maxNoOfWords) {
-
         this.sourceFileName = sourceFileName;
-        this.maxNoOfWords = maxNoOfWords;
-
         getWords();
 
     }
 
     private void getWords() {
-        StringBuilder data = new StringBuilder();
+        String wordString = "";
         try {
-            File myObj = new File(sourceFileName);
-            Scanner sc = new Scanner(myObj);
+            Scanner sc = new Scanner(new File(sourceFileName));
+
             while (sc.hasNextLine()) {
-                data.append(sc.next().toLowerCase()).append(" ");
+                wordString += sc.nextLine() + " ";
             }
             sc.close();
-        } catch (FileNotFoundException e) {
+        }
+        catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-        String[] words = data.toString().split("[^a-zA-Z]+");
+        if (wordString.equals("")) {
+            return;
+        }
 
-        // Get number of words
+        String[] words = wordString.toLowerCase(Locale.ROOT).split("[^a-zA-Z]+");
+
+        // number of words in total
         noOfWords = words.length;
 
-        // Get number of unique words
-        Set<String> uniqueWords = new HashSet<>(Arrays.asList(words));
+        // Different words
+        Set<String> uniqueWords = new HashSet<>(List.of(words));
         noOfDifferentWords = uniqueWords.size();
 
         // Get number of repetitions
@@ -60,7 +61,9 @@ public class TextAnalysis {
             }
             previous_word = word;
         }
+
     }
+
 
     public int wordCount() {
         return noOfWords;
