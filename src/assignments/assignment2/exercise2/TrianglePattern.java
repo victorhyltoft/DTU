@@ -33,9 +33,9 @@ public class TrianglePattern {
     }
 
     public void generateGrid() {
-        int[][] map = new int[rows][cells];
+        int[][] newGrid = new int[rows][cells];
         for (int i : getInitial()) {
-            map[0][i] = 1;
+            newGrid[0][i] = 1;
         }
 
         for (int row = 1; row < rows; row++) {
@@ -43,24 +43,24 @@ public class TrianglePattern {
                 if (cell - 1 >= 0 && cell + 1 < cells) {
                     // TBF This is pretty messy code but gets the job done.
                     // If all 3 cells are filled
-                    if (map[row - 1][cell - 1] == 1 && map[row - 1][cell] == 1 && map[row - 1][cell + 1] == 1) {
-                        map[row][cell] = 0;
+                    if (newGrid[row - 1][cell - 1] == 1 && newGrid[row - 1][cell] == 1 && newGrid[row - 1][cell + 1] == 1) {
+                        newGrid[row][cell] = 0;
                     } else {
                         // If two of the three cells are filled
-                        if (map[row - 1][cell] == 1 && map[row - 1][cell + 1] == 1) {
-                            map[row][cell] = 1;
-                        } else if (map[row - 1][cell - 1] == 1 && map[row - 1][cell + 1] == 1) {
-                            map[row][cell] = 0;
-                        } else if (map[row - 1][cell - 1] == 1 && map[row - 1][cell] == 1) {
-                            map[row][cell] = 0;
+                        if (newGrid[row - 1][cell] == 1 && newGrid[row - 1][cell + 1] == 1) {
+                            newGrid[row][cell] = 1;
+                        } else if (newGrid[row - 1][cell - 1] == 1 && newGrid[row - 1][cell + 1] == 1) {
+                            newGrid[row][cell] = 0;
+                        } else if (newGrid[row - 1][cell - 1] == 1 && newGrid[row - 1][cell] == 1) {
+                            newGrid[row][cell] = 0;
                         } else {
                             // If only one of the three cells are filled
-                            if (map[row - 1][cell + 1] == 1) {
-                                map[row][cell] = 1;
-                            } else if (map[row - 1][cell] == 1) {
-                                map[row][cell] = 1;
-                            } else if (map[row - 1][cell - 1] == 1) {
-                                map[row][cell] = 1;
+                            if (newGrid[row - 1][cell + 1] == 1) {
+                                newGrid[row][cell] = 1;
+                            } else if (newGrid[row - 1][cell] == 1) {
+                                newGrid[row][cell] = 1;
+                            } else if (newGrid[row - 1][cell - 1] == 1) {
+                                newGrid[row][cell] = 1;
                             }
                         }
                     }
@@ -68,7 +68,7 @@ public class TrianglePattern {
             }
         }
 
-        grid = map;
+        this.grid = newGrid;
     }
 
 }

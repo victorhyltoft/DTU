@@ -33,6 +33,7 @@ public class TextAnalysis {
             Scanner sc = new Scanner(new File(sourceFileName));
 
             while (sc.hasNextLine()) {
+                // We would probably rather use a StringBuilder
                 wordString += sc.nextLine() + " ";
             }
             sc.close();
