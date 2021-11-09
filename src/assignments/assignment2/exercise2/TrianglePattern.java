@@ -1,74 +1,73 @@
 package assignments.assignment2.exercise2;
 
+/**
+ * @author Victor Hyltoft
+ *
+ */
+
 public class TrianglePattern {
     // Fields
     private final int rows;
     private final int cells;
-    private final int[] initRow;
+    private final int[] initialRow;
     private int[][] grid;
 
     // Constructor
     public TrianglePattern(int n, int h, int[] init) {
-        cells = n;
-        rows = h;
-        initRow = init;
+        this.cells = n;
+        this.rows = h;
+        this.initialRow = init;
 
         generateGrid();
     }
 
     public int getN() {
-        return cells;
+        return this.cells;
     }
 
     public int[] getInitial() {
-        return initRow;
+        return this.initialRow;
     }
 
     public int getH() {
-        return rows;
+        return this.rows;
     }
 
     public int getValueAt(int r, int c) {
-        return grid[r][c];
+        return this.grid[r][c];
     }
 
     public void generateGrid() {
-        int[][] newGrid = new int[rows][cells];
+        // Define new temporary grid to store cell values.
+        int[][] tmpGrid = new int[rows][cells];
+        // Load initials into grid
         for (int i : getInitial()) {
-            newGrid[0][i] = 1;
+            tmpGrid[0][i] = 1;
         }
-
+        // Iterate over each row (except the top row)
         for (int row = 1; row < rows; row++) {
+            // Iterate over each cell
             for (int cell = 0; cell < cells; cell++) {
+                // Check if out of bounds
                 if (cell - 1 >= 0 && cell + 1 < cells) {
-                    // TBF This is pretty messy code but gets the job done.
+                    // Check which of the patterns;
                     // If all 3 cells are filled
-                    if (newGrid[row - 1][cell - 1] == 1 && newGrid[row - 1][cell] == 1 && newGrid[row - 1][cell + 1] == 1) {
-                        newGrid[row][cell] = 0;
-                    } else {
-                        // If two of the three cells are filled
-                        if (newGrid[row - 1][cell] == 1 && newGrid[row - 1][cell + 1] == 1) {
-                            newGrid[row][cell] = 1;
-                        } else if (newGrid[row - 1][cell - 1] == 1 && newGrid[row - 1][cell + 1] == 1) {
-                            newGrid[row][cell] = 0;
-                        } else if (newGrid[row - 1][cell - 1] == 1 && newGrid[row - 1][cell] == 1) {
-                            newGrid[row][cell] = 0;
-                        } else {
-                            // If only one of the three cells are filled
-                            if (newGrid[row - 1][cell + 1] == 1) {
-                                newGrid[row][cell] = 1;
-                            } else if (newGrid[row - 1][cell] == 1) {
-                                newGrid[row][cell] = 1;
-                            } else if (newGrid[row - 1][cell - 1] == 1) {
-                                newGrid[row][cell] = 1;
-                            }
-                        }
-                    }
+                    if (tmpGrid[row - 1][cell - 1] == 1 && tmpGrid[row - 1][cell] == 1 && tmpGrid[row - 1][cell + 1] == 1) tmpGrid[row][cell] = 0;
+                    // If two of the three cells are filled
+                    else if (tmpGrid[row - 1][cell] == 1 && tmpGrid[row - 1][cell + 1] == 1) tmpGrid[row][cell] = 1;
+                    else if (tmpGrid[row - 1][cell - 1] == 1 && tmpGrid[row - 1][cell + 1] == 1) tmpGrid[row][cell] = 0;
+                    else if (tmpGrid[row - 1][cell - 1] == 1 && tmpGrid[row - 1][cell] == 1) tmpGrid[row][cell] = 0;
+                    // If only one of the three cells are filled
+                    else if (tmpGrid[row - 1][cell + 1] == 1) tmpGrid[row][cell] = 1;
+                    else if (tmpGrid[row - 1][cell] == 1) tmpGrid[row][cell] = 1;
+                    else if (tmpGrid[row - 1][cell - 1] == 1) tmpGrid[row][cell] = 1;
+
+
                 }
             }
         }
 
-        this.grid = newGrid;
+        this.grid = tmpGrid;
     }
 
 }
