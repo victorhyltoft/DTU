@@ -6,6 +6,8 @@ public class Skakbriktest {
         System.out.println(hl1);
         hl1.translate(2, -2);
         System.out.println(hl1);
+        hl1.translate(-2, -2);
+        System.out.println(hl1);
 
     }
 }
