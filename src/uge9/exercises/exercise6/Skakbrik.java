@@ -24,8 +24,9 @@ public abstract class Skakbrik extends Point {
         else {
             if (!legalMove(dx, dy)) {
                 raiseException("Illegal move");
+            } else {
+                super.translate(dx, dy);
             }
-            super.translate(dx, dy);
         }
 
     }
@@ -34,10 +35,9 @@ public abstract class Skakbrik extends Point {
 
     public void raiseException(String exception) {
         try {
-            throw new IllegalArgumentException(exception);
+            throw new IllegalArgumentException();
         } catch (Exception e) {
             e.printStackTrace();
-            System.exit(1);
         }
     }
 
