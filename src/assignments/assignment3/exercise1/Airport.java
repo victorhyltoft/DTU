@@ -5,15 +5,13 @@ import java.util.List;
 
 public class Airport {
     // The id given to the planes in the airport
-    private int planeID;
-    private final String airportName;
-
-    public Airport(String airportName) {
-        this.airportName = airportName;
-        this.planeID = 1;
-    }
+    private int planeID = 1;
 
     List<Plane> planes = new ArrayList<>();
+
+    // Constructor
+    public Airport() {
+    }
 
     public void land(Plane plane) {
         boolean idTaken = false;
@@ -25,7 +23,7 @@ public class Airport {
         }
         if (!idTaken) {
             plane.setId(planeID);
-            setPlaneID();
+            increaseID();
             planes.add(plane);
         }
     }
@@ -45,21 +43,13 @@ public class Airport {
         for (Plane plane : planes) {
             output.append(plane.toString()).append("\n");
         }
-        // remove last newline (\n)
-        // TODO : fix when no planes?
-        int tmp = output.length();
-        if (tmp != 0) {
-            output.delete(tmp -1, tmp);
-        }
+        // remove last newline (\n) (use .strip())
         return output.toString();
 
     }
 
-    public void setPlaneID() {
+    public void increaseID() {
         this.planeID++;
     }
 
-    public String getAirportName() {
-        return airportName;
-    }
 }
