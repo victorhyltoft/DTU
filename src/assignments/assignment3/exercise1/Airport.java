@@ -1,13 +1,12 @@
 package assignments.assignment3.exercise1;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class Airport {
     // The id given to the planes in the airport
     private int planeID = 1;
 
-    List<Plane> planes = new ArrayList<>();
+    ArrayList<Plane> planes = new ArrayList<>();
 
     // Constructor
     public Airport() {

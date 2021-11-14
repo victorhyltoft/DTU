@@ -2,20 +2,30 @@ package assignments.assignment3.exercise2;
 
 import java.awt.*;
 
-import static assignments.assignment3.exercise2.PeberholmConstantsAndUtilities.FLOWER_COLOR;
+import static assignments.assignment3.exercise2.PeberholmConstantsAndUtilities.*;
 
 public class Flower extends Plant {
     public Flower(Point legalRandomPosition) {
-        super();
+        super(legalRandomPosition);
     }
 
     @Override
     public Plant[] spreadSeeds() {
-        return new Plant[0];
+        return createSeeds(FLOWER_SEED_NO, FLOWER_RANGE);
+    }
+
+    @Override
+    protected Plant newSeed(int xCoords, int yCoords) {
+        return new Flower(new Point(xCoords, yCoords));
     }
 
     @Override
     public Color getColor() {
         return FLOWER_COLOR;
+    }
+
+    @Override
+    public String toString() {
+        return "Flower " + super.toString();
     }
 }
