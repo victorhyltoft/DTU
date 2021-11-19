@@ -9,7 +9,7 @@ public class Tree extends Plant {
 
     // Constructor
     public Tree(Point legalRandomPosition) {
-        super(legalRandomPosition);
+        super(legalRandomPosition, TREE_COLOR);
     }
 
 
@@ -22,10 +22,9 @@ public class Tree extends Plant {
         return new Tree(new Point(xCoords, yCoords));
     }
 
-
     @Override
     public Color getColor() {
-        return TREE_COLOR;
+        return this.color;
     }
 
     // TODO
