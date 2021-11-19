@@ -8,8 +8,9 @@ public abstract class Plant {
     protected Point position;
     protected Color color;
 
-    public Plant(Point position) {
+    public Plant(Point position, Color color) {
         this.position = position;
+        this.color = color;
     }
 
     // Put abstract and non-abstract methods here.
@@ -34,7 +35,6 @@ public abstract class Plant {
     }
 
     protected abstract Plant newSeed(int xCoords, int yCoords);
-
 
     public abstract Color getColor();
 

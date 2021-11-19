@@ -6,7 +6,7 @@ import static assignments.assignment3.exercise2.PeberholmConstantsAndUtilities.*
 
 public class Flower extends Plant {
     public Flower(Point legalRandomPosition) {
-        super(legalRandomPosition);
+        super(legalRandomPosition, FLOWER_COLOR);
     }
 
     @Override
@@ -21,7 +21,7 @@ public class Flower extends Plant {
 
     @Override
     public Color getColor() {
-        return FLOWER_COLOR;
+        return this.color;
     }
 
     @Override
