@@ -6,6 +6,7 @@ import static assignments.assignment3.exercise2.PeberholmConstantsAndUtilities.*
 
 public class Bush extends Plant {
 
+    // Constructor
     public Bush(Point legalRandomPosition) {
         super(legalRandomPosition, BUSH_COLOR);
     }
@@ -21,14 +22,7 @@ public class Bush extends Plant {
     }
 
     @Override
-    public Color getColor() {
-        return this.color;
-    }
-
-    @Override
     public String toString() {
         return "Bush " + super.toString();
     }
-
-
 }

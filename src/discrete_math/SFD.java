@@ -22,7 +22,7 @@ public class SFD {
         System.out.println("row \t r \t q \t s \t t");
         System.out.println("-----------------------------------");
         System.out.println("0" + "\t" + r.get(0) + "\t" + q.get(0) + "\t"+ s.get(0) + "\t" + + t.get(0) + "\t");
-        System.out.println("1" + "\t" + r.get(1) + "\t" + r.get(1) + "\t"+ s.get(1) + "\t" + + t.get(1) + "\t");
+        System.out.println("1" + "\t" + r.get(1) + "\t" + q.get(1) + "\t"+ s.get(1) + "\t" + + t.get(1) + "\t");
 
         int it = 2;
         while(!r.get(r.size()-1).equals(0) && it < 50) {

@@ -5,6 +5,8 @@ import java.awt.*;
 import static assignments.assignment3.exercise2.PeberholmConstantsAndUtilities.*;
 
 public class Flower extends Plant {
+
+    // Constructor
     public Flower(Point legalRandomPosition) {
         super(legalRandomPosition, FLOWER_COLOR);
     }
@@ -17,11 +19,6 @@ public class Flower extends Plant {
     @Override
     protected Plant newSeed(int xCoords, int yCoords) {
         return new Flower(new Point(xCoords, yCoords));
-    }
-
-    @Override
-    public Color getColor() {
-        return this.color;
     }
 
     @Override
